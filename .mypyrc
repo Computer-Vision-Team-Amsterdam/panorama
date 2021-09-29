@@ -1,0 +1,45 @@
+[mypy]
+pretty = True
+show_absolute_path = True
+show_column_numbers = True
+show_error_codes = True
+
+check_untyped_defs = True
+disallow_any_generics = True
+disallow_incomplete_defs = True
+# SQLAlchemy Base models has no type annotations
+disallow_subclassing_any = False
+disallow_untyped_calls = True
+disallow_untyped_decorators = False
+disallow_untyped_defs = True
+no_implicit_optional = True
+no_implicit_reexport = False
+strict_equality = True
+warn_redundant_casts = True
+warn_return_any = False
+warn_unused_configs = True
+warn_unused_ignores = True
+
+[mypy-alembic.*]
+ignore_missing_imports = True
+
+[mypy-factory]
+ignore_missing_imports = True
+
+[mypy-geoalchemy2]
+ignore_missing_imports = True
+
+[mypy-psycopg2]
+ignore_missing_imports = True
+
+[mypy-pytest]
+ignore_missing_imports = True
+
+[mypy-pytest_postgresql.*]
+ignore_missing_imports = True
+
+[mypy-sqlalchemy.*]
+ignore_missing_imports = True
+
+[mypy-uvicorn]
+ignore_missing_imports = True
