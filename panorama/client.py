@@ -4,7 +4,7 @@ httpx client to connect to the Panorama API
 This module should contain all code related to network interactions with the Panorama
 API
 """
-from datetime import datetime
+from datetime import date
 from pathlib import Path
 from typing import Optional, Type, TypeVar
 
@@ -52,8 +52,8 @@ class _PanoramaClient(AsyncClient):
     async def list_panoramas(
         self,
         location: Optional[models.LocationQuery] = None,
-        timestamp_before: Optional[datetime] = None,
-        timestamp_after: Optional[datetime] = None,
+        timestamp_before: Optional[date] = None,
+        timestamp_after: Optional[date] = None,
         limit_results: Optional[int] = None,
     ) -> models.PagedPanoramasResponse:
         """List and filter panorama objects"""
@@ -65,14 +65,14 @@ class _PanoramaClient(AsyncClient):
                 f"&srid={location.srid}"
             )
         if timestamp_before:
-            query += f"&timestamp_before={timestamp_before.timestamp()}"
+            query += f"&timestamp_before={timestamp_before.isoformat()}"
         if timestamp_after:
-            query += f"&timestamp_after={timestamp_after.timestamp()}"
+            query += f"&timestamp_after={timestamp_after.isoformat()}"
         if limit_results:
             query += f"&limit_results={limit_results}"
         if query:
             query = f"?{query.lstrip('&')}"
-
+        print(query)
         return await self._get_or_raise(query, models.PagedPanoramasResponse)
 
     async def previous_page(

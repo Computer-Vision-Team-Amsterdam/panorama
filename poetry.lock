@@ -159,6 +159,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "haversine"
+version = "2.5.1"
+description = "Calculate the distance between 2 points on Earth."
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "httpcore"
 version = "0.13.7"
 description = "A minimal low-level HTTP client."
@@ -668,7 +676,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "bc90a8ce888726ee1d764b04d70dd7127177c15a2933de7d8a47efcb76ec868c"
+content-hash = "69de84610162330cc58b1ca71530bac1a1309a9e8961bd2ab63662d135a70c93"
 
 [metadata.files]
 anyio = [
@@ -776,6 +784,10 @@ decorator = [
 h11 = [
     {file = "h11-0.12.0-py3-none-any.whl", hash = "sha256:36a3cb8c0a032f56e2da7084577878a035d3b61d104230d4bd49c0c6b555a9c6"},
     {file = "h11-0.12.0.tar.gz", hash = "sha256:47222cb6067e4a307d535814917cd98fd0a57b6788ce715755fa2b6c28b56042"},
+]
+haversine = [
+    {file = "haversine-2.5.1-py2.py3-none-any.whl", hash = "sha256:6e76933a1042e6e62464b66ef686331e2798147eeedcb32b503db696d7bf0582"},
+    {file = "haversine-2.5.1.tar.gz", hash = "sha256:357e41dfddc4a0f2b1c941d92a590cac840f7ce4b3da14b45b68d968b3ad7cc7"},
 ]
 httpcore = [
     {file = "httpcore-0.13.7-py3-none-any.whl", hash = "sha256:369aa481b014cf046f7067fddd67d00560f2f00426e79569d99cb11245134af0"},

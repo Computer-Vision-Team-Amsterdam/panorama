@@ -1,10 +1,12 @@
 # pylint: disable=C0116,W0613
 """Tests for the client module"""
 import asyncio
+from datetime import date, datetime, time, timezone
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from haversine import Unit, haversine
 from httpx import HTTPStatusError
 
 from panorama.client import _PanoramaClient
@@ -49,6 +51,7 @@ class TestClient:
     async def test_lists_panoramas(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas()
         assert response
+        assert response.panoramas
 
     @pytest.mark.vcr
     async def test_lists_panoramas_at_location(self) -> None:
@@ -62,3 +65,119 @@ class TestClient:
             if panorama is not None:
                 assert panorama.geometry.coordinates[0] == location.latitude
                 assert panorama.geometry.coordinates[1] == location.longitude
+
+    @pytest.mark.vcr
+    async def test_lists_panoramas_only_before_timestamp(self) -> None:
+        timestamp_before = date(2018, 1, 1)
+
+        # This may be flaky without the option to sort the API response by timestamp
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            timestamp_before=timestamp_before
+        )
+
+        for panorama in response.panoramas:
+            assert panorama
+            assert panorama.timestamp <= datetime.combine(
+                timestamp_before, time(), timezone.utc
+            )
+
+    @pytest.mark.vcr
+    async def test_lists_panoramas_only_after_timestamp(self) -> None:
+        timestamp_after = date(2018, 1, 1)
+
+        # This may be flaky without the option to sort the API response by timestamp
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            timestamp_after=timestamp_after
+        )
+
+        for panorama in response.panoramas:
+            assert panorama
+            assert panorama.timestamp >= datetime.combine(
+                timestamp_after, time(), timezone.utc
+            )
+
+    @pytest.mark.vcr
+    async def test_lists_only_n_results(self) -> None:
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            limit_results=2
+        )
+
+        assert len(response.panoramas) == 2
+
+    @pytest.mark.vcr
+    async def test_lists_results_with_combined_filters(self) -> None:
+        location = LocationQuery(
+            latitude=4.90774612505295, longitude=52.3626770908732, radius=10
+        )
+        timestamp_after = date(2018, 1, 1)
+        timestamp_before = date(2020, 1, 1)
+
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            location=location,
+            timestamp_after=timestamp_after,
+            timestamp_before=timestamp_before,
+            limit_results=100,
+        )
+
+        assert response.count <= 100
+        for panorama in response.panoramas:
+            assert panorama
+            assert panorama.timestamp >= datetime.combine(
+                timestamp_after, time(), timezone.utc
+            )
+            assert panorama.timestamp <= datetime.combine(
+                timestamp_before, time(), timezone.utc
+            )
+            assert (
+                haversine(
+                    (location.latitude, location.longitude),
+                    (
+                        panorama.geometry.coordinates[0],
+                        panorama.geometry.coordinates[1],
+                    ),
+                    Unit.METERS,
+                )
+                # Fuzz the distance to mitigate rounding errors resulting from
+                # using WGS:84 coordinate system to calculate relatively small
+                # distances. We are not validating the API's correctness anyway.
+                # Use the RD New projection to achieve better results.
+                <= 2 * location.radius
+            )
+
+    @pytest.mark.vcr
+    async def test_lists_next_page(self) -> None:
+        response: PagedPanoramasResponse = await self.client.list_panoramas()
+        next_page = await self.client.next_page(response)
+
+        assert next_page.links.self.href == response.links.next.href
+        assert response.panoramas != next_page.panoramas
+
+    @pytest.mark.vcr
+    async def test_raises_when_no_next_page(self) -> None:
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            limit_results=1
+        )
+        with pytest.raises(ValueError) as err:
+            await self.client.next_page(response)
+
+            assert err.value == "No next page available"
+
+    @pytest.mark.vcr
+    async def test_lists_previous_page(self) -> None:
+        response: PagedPanoramasResponse = await self.client.list_panoramas()
+        next_page = await self.client.next_page(response)
+        first_page = await self.client.previous_page(next_page)
+
+        assert first_page.links.self.href
+        assert first_page.links.self.href.endswith("?page=1")
+        assert response.panoramas == first_page.panoramas
+
+    @pytest.mark.vcr
+    async def test_raises_when_no_previous_page(self) -> None:
+        response: PagedPanoramasResponse = await self.client.list_panoramas(
+            limit_results=1
+        )
+        with pytest.raises(ValueError) as err:
+            await self.client.previous_page(response)
+
+            assert err.value == "No previous page available"
