@@ -1,8 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-omit = scan_api/settings/*.py
-       scan_api/migrations/*.py
 
 [report]
 # Regexes for lines to exclude from consideration

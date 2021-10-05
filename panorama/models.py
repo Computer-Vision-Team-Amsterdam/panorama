@@ -1,17 +1,14 @@
 # pylint: disable=R0903
 """
-Module that should contain all (helper) models wrapping and/or abstracting API data
+This module should contain all (helper) models wrapping and/or abstracting API data
 """
 from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from pathlib import Path
 from typing import Dict, List, Literal, Optional
 
-from pydantic import BaseModel, DirectoryPath, Field, HttpUrl
-
-from panorama.client import PanoramaClient
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class Link(BaseModel):
@@ -91,55 +88,6 @@ class Panorama(BaseModel):
 
     tags: List[Optional[str]]
 
-    @staticmethod
-    async def get(panorama_id: str) -> Panorama:
-        """Get an individual panorama object by remote id"""
-        response = await PanoramaClient.get(panorama_id)
-        if response.is_error:
-            response.raise_for_status()
-        return Panorama.parse_obj(response.json())
-
-    # @staticmethod
-    # async def list(
-    #     location: Optional[LocationQuery] = None,
-    #     timestamp_before: Optional[datetime] = None,
-    #     timestamp_after: Optional[datetime] = None,
-    #     limit_results: Optional[int] = None,
-    # ) -> PagedPanoramasResponse:
-    #     query = ""
-    #     if location:
-    #         query += f"&near={location.latitude},{location.longitude}" \
-    #                  f"&radius={location.radius}" \
-    #                  f"&srid={location.srid}"
-    #     if timestamp_before:
-    #         query += f"&timestamp_before={timestamp_before.timestamp()}"
-    #     if timestamp_after:
-    #         query += f"&timestamp_after={timestamp_after.timestamp()}"
-    #     if limit_results:
-    #         query += f"&limit_results={limit_results}"
-    #     if query:
-    #         query = f"?{query.lstrip('&')}"
-    #
-    #     response = await PanoramaClient.get(query)
-    #     if response.is_error:
-    #         response.raise_for_status()
-    #     return PagedPanoramasResponse.parse_obj(response.json())
-    #
-    async def download_image(
-        self,
-        size: ImageSize = ImageSize.MEDIUM,
-        output_location: DirectoryPath = Path("."),
-    ) -> Panorama:
-        """Download the selected panorama image to the specified location"""
-        response = await PanoramaClient.get(
-            getattr(self.links, f"equirectangular_{size.value}").href
-        )
-
-        with open(Path(output_location, self.filename), "wb") as file_header:
-            file_header.write(response.content)
-
-        return self
-
 
 class PanoramasLinks(BaseModel):
     """
@@ -168,19 +116,3 @@ class PagedPanoramasResponse(BaseModel):
         more user friendly
         """
         return self.embedded["panoramas"]
-
-    async def _get_link(self, link: Optional[HttpUrl]) -> PagedPanoramasResponse:
-        """Helper function to perform common tasks when calling the API"""
-        if link is None:
-            return self.copy(exclude={"embedded": "panoramas"})
-
-        response = await PanoramaClient.get(link)
-        return PagedPanoramasResponse.parse_obj(response.json())
-
-    async def previous(self) -> PagedPanoramasResponse:
-        """Get the previous page"""
-        return await self._get_link(self.links.previous.href)
-
-    async def next(self) -> PagedPanoramasResponse:
-        """Get the next page"""
-        return await self._get_link(self.links.next.href)
