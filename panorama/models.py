@@ -47,11 +47,14 @@ class PanoramaLinks(BaseModel):
 class LocationQuery(BaseModel):
     """
     latitude: latitude in degrees for the WGS84 standard, or x coordinate for the
-        RD New projection
+    RD New projection
+
     longitude: longitude in degrees for the WGS84 standard, or y coordinate for the
-        RD New projection
+    RD New projection
+
     radius: radius in meters surrounding the specified point
-    srid can be either
+
+    srid can be either:
         - 4326, which represents spatial data using longitude and latitude coordinates
             on the Earth's surface as defined in the WGS84 standard,
         - 28992, which represents the Dutch Amersfoort / RD New projection.

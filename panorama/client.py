@@ -72,7 +72,7 @@ class _PanoramaClient(AsyncClient):
             query += f"&limit_results={limit_results}"
         if query:
             query = f"?{query.lstrip('&')}"
-        print(query)
+
         return await self._get_or_raise(query, models.PagedPanoramasResponse)
 
     async def previous_page(
@@ -88,7 +88,7 @@ class _PanoramaClient(AsyncClient):
     async def next_page(
         self, page: models.PagedPanoramasResponse
     ) -> models.PagedPanoramasResponse:
-        """Get the previous page"""
+        """Get the next page"""
         if not page.links.next.href:
             raise ValueError("No next page available")
         return await self._get_or_raise(
