@@ -23,14 +23,31 @@ from panorama.client import PanoramaClient
 from panorama import models
 
 # Get the first page of panoramas
-response: models.PagedPanoramasResponse = PanoramaClient.list_panoramas()
+response: models.PagedPanoramasResponse = await PanoramaClient.list_panoramas()
 
 # Get the first panorama
 panorama: models.Panorama = response.panoramas[0]
 
 # Download the corresponding image to your machine
-PanoramaClient.download_image(panorama, size=models.ImageSize.FULL)
+await PanoramaClient.download_image(panorama, size=models.ImageSize.FULL)
 
 # Get the next page of panoramas
-next_page = PanoramaClient.next_page(response)
+next_page: models.PagedPanoramasResponse = await PanoramaClient.next_page(response)
+
+# Pass different arguments to PanoramaClient.list_panoramas() to query
+# location and date, and limit your results
+from datetime import date
+
+location = models.LocationQuery(
+    latitude=4.90774612505295, longitude=52.3626770908732, radius=10
+)
+timestamp_after = date(2018, 1, 1)
+timestamp_before = date(2020, 1, 1)
+
+query_result: models.PagedPanoramasResponse = await PanoramaClient.list_panoramas(
+    location=location,
+    timestamp_after=timestamp_after,
+    timestamp_before=timestamp_before,
+    limit_results=100,
+)
 ```
