@@ -39,7 +39,7 @@ next_page: models.PagedPanoramasResponse = await PanoramaClient.next_page(respon
 from datetime import date
 
 location = models.LocationQuery(
-    latitude=4.90774612505295, longitude=52.3626770908732, radius=10
+    latitude=52.3626770908732, longitude=4.90774612505295, radius=10
 )
 timestamp_after = date(2018, 1, 1)
 timestamp_before = date(2020, 1, 1)

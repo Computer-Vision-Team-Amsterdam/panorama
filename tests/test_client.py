@@ -55,16 +55,19 @@ class TestClient:
 
     @pytest.mark.vcr
     async def test_lists_panoramas_at_location(self) -> None:
-        location = LocationQuery(latitude=4.90765, longitude=52.36272, radius=1)
+        location = LocationQuery(
+            latitude=52.3626755978307, longitude=4.90769952140867, radius=0.5
+        )
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             location=location
         )
 
+        print(response.count)
         assert response.panoramas
         for panorama in response.panoramas:
             if panorama is not None:
-                assert panorama.geometry.coordinates[0] == location.latitude
-                assert panorama.geometry.coordinates[1] == location.longitude
+                assert panorama.geometry.coordinates[0] == location.longitude
+                assert panorama.geometry.coordinates[1] == location.latitude
 
     @pytest.mark.vcr
     async def test_lists_panoramas_only_before_timestamp(self) -> None:
@@ -107,7 +110,7 @@ class TestClient:
     @pytest.mark.vcr
     async def test_lists_results_with_combined_filters(self) -> None:
         location = LocationQuery(
-            latitude=4.90774612505295, longitude=52.3626770908732, radius=10
+            latitude=52.3626770908732, longitude=4.90774612505295, radius=10
         )
         timestamp_after = date(2018, 1, 1)
         timestamp_before = date(2020, 1, 1)
@@ -130,7 +133,7 @@ class TestClient:
             )
             assert (
                 haversine(
-                    (location.latitude, location.longitude),
+                    (location.longitude, location.latitude),
                     (
                         panorama.geometry.coordinates[0],
                         panorama.geometry.coordinates[1],

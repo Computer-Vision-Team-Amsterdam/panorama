@@ -62,7 +62,7 @@ class LocationQuery(BaseModel):
 
     latitude: float
     longitude: float
-    radius: int = 1
+    radius: float = 1.0
     srid: int = 4326
 
 

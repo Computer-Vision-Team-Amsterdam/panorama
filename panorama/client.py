@@ -60,7 +60,7 @@ class _PanoramaClient(AsyncClient):
         query = ""
         if location:
             query += (
-                f"&near={location.latitude},{location.longitude}"
+                f"&near={location.longitude},{location.latitude}"
                 f"&radius={location.radius}"
                 f"&srid={location.srid}"
             )
