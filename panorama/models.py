@@ -4,9 +4,14 @@ This module should contain all (helper) models wrapping and/or abstracting API d
 """
 from __future__ import annotations
 
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl
 
