@@ -4,16 +4,17 @@ This module should contain all (helper) models wrapping and/or abstracting API d
 """
 from __future__ import annotations
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
+import sys
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl
+
+if sys.version_info >= (3, 8):
+    from typing import Literal
+else:
+    from typing_extensions import Literal
 
 
 class Link(BaseModel):
