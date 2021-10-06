@@ -6,50 +6,90 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-strategy:
-  matrix:
-    # Python27:
-    #   python.version: '2.7'
-    # Python35:
-    #   python.version: '3.5'
-    # Python36:
-    #   python.version: '3.6'
-    Python37:
-      python.version: '3.7'
-    Python38:
-      python.version: '3.8'
-    Python39:
-      python.version: '3.9'
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+jobs:
+  - job: Linux
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      matrix:
+        Python36:
+          python.version: '3.6'
+        Python37:
+          python.version: '3.7'
+        Python38:
+          python.version: '3.8'
+        Python39:
+          python.version: '3.9'
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install poetry
-    poetry install
-  displayName: 'Install dependencies'
+      - script: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+        displayName: 'Install dependencies'
 
-- script: |
-    poetry run isort panorama tests
-  displayName: 'isort'
+      - script: |
+          poetry run pytest -s --cov=panorama --cov-report term-missing
+        displayName: 'pytest'
 
-- script: |
-    poetry run black .
-  displayName: 'black'
+  - job: OSX
+    pool:
+      vmImage: macOS-latest
+    strategy:
+      matrix:
+        Python36:
+          python.version: '3.6'
+        Python37:
+          python.version: '3.7'
+        Python38:
+          python.version: '3.8'
+        Python39:
+          python.version: '3.9'
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
 
-- script: |
-    poetry run mypy --config-file=.mypyrc panorama tests
-  displayName: 'mypy'
+      - script: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+        displayName: 'Install dependencies'
 
-- script: |
-    poetry run pylint --jobs=0 --rcfile=.pylintrc panorama tests
-  displayName: 'pylint'
+      - script: |
+          poetry run pytest -s --cov=panorama --cov-report term-missing
+        displayName: 'pytest'
 
-- script: |
-    poetry run pytest -s --cov=panorama --cov-report term-missing
-  displayName: 'pytest'
+  - job: Style
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      matrix:
+        Python39:
+          python.version: '3.9'
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+
+      - script: |
+          poetry run isort panorama tests
+        displayName: 'isort'
+
+      - script: |
+          poetry run black .
+        displayName: 'black'
+
+      - script: |
+          poetry run mypy --config-file=.mypyrc panorama tests
+        displayName: 'mypy'
+
+      - script: |
+          poetry run pylint --jobs=0 --rcfile=.pylintrc panorama tests
+        displayName: 'pylint'
