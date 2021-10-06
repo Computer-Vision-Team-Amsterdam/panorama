@@ -1,0 +1,57 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    # Python27:
+    #   python.version: '2.7'
+    # Python35:
+    #   python.version: '3.5'
+    # Python36:
+    #   python.version: '3.6'
+    Python37:
+      python.version: '3.7'
+    Python38:
+      python.version: '3.8'
+    Python39:
+      python.version: '3.9'
+    Python310:
+      python.version: '3.10'
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install poetry
+    poetry install
+  displayName: 'Install dependencies'
+
+- script: |
+    poetry run isort panorama tests
+  displayName: 'isort'
+
+- script: |
+    poetry run black .
+  displayName: 'black'
+
+- script: |
+    poetry run mypy --config-file=.mypyrc panorama tests
+  displayName: 'mypy'
+
+- script: |
+    poetry run pylint --jobs=0 --rcfile=.pylintrc panorama tests
+  displayName: 'pylint'
+
+- script: |
+    poetry run pytest -s --cov=panorama --cov-report term-missing
+  displayName: 'pytest'
