@@ -1,7 +1,5 @@
 # Panorama API Client
 
-[![Build Status](https://dev.azure.com/CloudCompetenceCenter/Computer-Vision-Team-Amsterdam/_apis/build/status/Computer-Vision-Team-Amsterdam.panorama?branchName=main)](https://dev.azure.com/CloudCompetenceCenter/Computer-Vision-Team-Amsterdam/_build/latest?definitionId=516&branchName=main)
-
 The Panorama API Client is a package that wraps the Datapunt Panoramas API.
 
 ## Requirements
