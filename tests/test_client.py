@@ -62,7 +62,6 @@ class TestClient:
             location=location
         )
 
-        print(response.count)
         assert response.panoramas
         for panorama in response.panoramas:
             if panorama is not None:
