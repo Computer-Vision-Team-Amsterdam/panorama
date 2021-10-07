@@ -19,7 +19,7 @@ poetry install
 Or install as a dependency to your own project:
 
 ```shell
-pip install git+ssh://git@github.com/Computer-Vision-Team-Amsterdam/panorama.git@v0.1.0
+pip install git+ssh://git@github.com/Computer-Vision-Team-Amsterdam/panorama.git@v0.2.0
 ```
 
 Use the `PanoramaClient` to browse retrieve Panoramas from the API:
