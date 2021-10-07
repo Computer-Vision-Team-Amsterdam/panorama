@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field, HttpUrl
 
 if sys.version_info >= (3, 8):
     from typing import Literal
-else:
+else:  # pragma: no cover
     from typing_extensions import Literal
 
 

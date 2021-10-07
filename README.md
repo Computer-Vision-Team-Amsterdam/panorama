@@ -25,23 +25,20 @@ pip install git+ssh://git@github.com/Computer-Vision-Team-Amsterdam/panorama.git
 Use the `PanoramaClient` to browse retrieve Panoramas from the API:
 
 ```python
-import asyncio
-loop = asyncio.get_event_loop()
-
 from panorama.client import PanoramaClient
 from panorama import models
 
 # Get the first page of panoramas
-response: models.PagedPanoramasResponse = loop.run_until_complete(PanoramaClient.list_panoramas())
+response: models.PagedPanoramasResponse = PanoramaClient.list_panoramas()
 
 # Get the first panorama
 panorama: models.Panorama = response.panoramas[0]
 
 # Download the corresponding image to your machine
-loop.run_until_complete(PanoramaClient.download_image(panorama, size=models.ImageSize.FULL))
+PanoramaClient.download_image(panorama, size=models.ImageSize.FULL)
 
 # Get the next page of panoramas
-next_page: models.PagedPanoramasResponse = loop.run_until_complete(PanoramaClient.next_page(response))
+next_page: models.PagedPanoramasResponse = PanoramaClient.next_page(response)
 
 # Pass different arguments to PanoramaClient.list_panoramas() to query
 # location and date, and limit your results
@@ -53,12 +50,26 @@ location = models.LocationQuery(
 timestamp_after = date(2018, 1, 1)
 timestamp_before = date(2020, 1, 1)
 
-query_result: models.PagedPanoramasResponse = loop.run_until_complete(
-    PanoramaClient.list_panoramas(
-        location=location,
-        timestamp_after=timestamp_after,
-        timestamp_before=timestamp_before,
-        limit_results=100,
-    )
+query_result: models.PagedPanoramasResponse = PanoramaClient.list_panoramas(
+    location=location,
+    timestamp_after=timestamp_after,
+    timestamp_before=timestamp_before,
+    limit_results=100,
 )
+```
+
+Or use the `async` client with the same interface:
+
+```python
+import asyncio
+
+from panorama.client import AsyncPanoramaClient
+from panorama import models
+
+# Start your event loop
+loop = asyncio.get_event_loop()
+
+# Get the first page of panoramas
+response: models.PagedPanoramasResponse = loop.run_until_complete(AsyncPanoramaClient.list_panoramas())
+
 ```
