@@ -45,7 +45,7 @@ class TestAsyncClient:
         with patch("builtins.open") as the_mock:
             await self.client.download_image(panorama)
 
-        the_mock.assert_called_once_with(Path(panorama.filename), "wb")
+        the_mock.assert_called_once_with(Path(panorama.id), "wb")
 
     @pytest.mark.vcr
     async def test_lists_panoramas(self) -> None:
@@ -211,7 +211,7 @@ class TestClient:
         with patch("builtins.open") as the_mock:
             self.client.download_image(panorama)
 
-        the_mock.assert_called_once_with(Path(panorama.filename), "wb")
+        the_mock.assert_called_once_with(Path(panorama.id), "wb")
 
     @pytest.mark.vcr
     def test_lists_panoramas(self) -> None:
