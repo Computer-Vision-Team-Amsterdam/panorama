@@ -49,7 +49,7 @@ class BasePanoramaClient:
         output_location: DirectoryPath, panorama: models.Panorama, response: Response
     ) -> None:
         """Writes an image to disk from an API response"""
-        with open(Path(output_location, panorama.id), "wb") as file_header:
+        with open(Path(output_location, f"{panorama.id}.jpg"), "wb") as file_header:
             file_header.write(response.content)
 
 
