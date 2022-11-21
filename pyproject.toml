@@ -6,11 +6,11 @@ authors = ["Thomas Brockmeier <t.brockmeier@amsterdam.nl>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-httpx = "^0.19.0"
+httpx = "^0.23.0"
 pydantic = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 vcrpy = "^4.1.1"
 black = "^21.9b0"
 mypy = "^0.910"
