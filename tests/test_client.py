@@ -8,7 +8,7 @@ try:
     from typing import Literal
 except ImportError:
     # Python 3.7 and below
-    from typing_extensions import Literal
+    from typing_extensions import Literal  # type: ignore
 
 from unittest.mock import patch
 
