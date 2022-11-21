@@ -3,7 +3,13 @@
 import asyncio
 from datetime import date, datetime, time, timezone
 from pathlib import Path
-from typing import Literal
+try:
+    # Python 3.8 or higher
+    from typing import Literal
+except ImportError:
+    # Python 3.7 and below
+    from typing_extensions import Literal
+
 from unittest.mock import patch
 
 import pytest
