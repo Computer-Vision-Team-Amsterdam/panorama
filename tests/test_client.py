@@ -3,6 +3,13 @@
 import asyncio
 from datetime import date, datetime, time, timezone
 from pathlib import Path
+try:
+    # Python 3.8 or higher
+    from typing import Literal
+except ImportError:
+    # Python 3.7 and below
+    from typing_extensions import Literal  # type: ignore
+
 from unittest.mock import patch
 
 import pytest
@@ -162,7 +169,7 @@ class TestAsyncClient:
         with pytest.raises(ValueError) as err:
             await self.client.next_page(response)
 
-            assert err.value == "No next page available"
+            assert err.value == Literal["No next page available"]
 
     @pytest.mark.vcr
     async def test_lists_previous_page(self) -> None:
@@ -182,7 +189,7 @@ class TestAsyncClient:
         with pytest.raises(ValueError) as err:
             await self.client.previous_page(response)
 
-            assert err.value == "No previous page available"
+            assert err.value == Literal["No previous page available"]
 
 
 class TestClient:
@@ -322,7 +329,7 @@ class TestClient:
         with pytest.raises(ValueError) as err:
             self.client.next_page(response)
 
-            assert err.value == "No next page available"
+            assert err.value == Literal["No next page available"]
 
     @pytest.mark.vcr
     def test_lists_previous_page(self) -> None:
@@ -340,4 +347,4 @@ class TestClient:
         with pytest.raises(ValueError) as err:
             self.client.previous_page(response)
 
-            assert err.value == "No previous page available"
+            assert err.value == Literal["No previous page available"]

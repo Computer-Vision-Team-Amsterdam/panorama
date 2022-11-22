@@ -6,13 +6,13 @@ authors = ["Thomas Brockmeier <t.brockmeier@amsterdam.nl>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-httpx = "^0.19.0"
+httpx = "^0.23.0"
 pydantic = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 vcrpy = "^4.1.1"
-black = "^21.9b0"
+black = "^22.10"
 mypy = "^0.910"
 isort = "^5.9.3"
 pylint = "^2.11.1"
@@ -21,6 +21,7 @@ pytest-asyncio = "^0.15.1"
 pytest-vcr = "^1.0.2"
 haversine = "^2.5.1"
 Sphinx = "^4.2.0"
+typing-extensions = { version = "^4.4", python = "<3.8" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
