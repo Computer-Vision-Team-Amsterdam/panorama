@@ -11,7 +11,7 @@ interactions:
       host:
       - api.data.amsterdam.nl
       user-agent:
-      - python-httpx/0.19.0
+      - python-httpx/0.23.1
     method: GET
     uri: https://api.data.amsterdam.nl/panorama/panoramas/?limit_results=2
   response:
@@ -34,7 +34,7 @@ interactions:
       referrer-policy:
       - strict-origin
       strict-transport-security:
-      - max-age=31536000; includeSubDomains; preload
+      - max-age=31536999; includeSubDomains; preload
       vary:
       - Accept, Origin
       x-content-type-options:
