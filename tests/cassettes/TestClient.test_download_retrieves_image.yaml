@@ -11,53 +11,7 @@ interactions:
       host:
       - api.data.amsterdam.nl
       user-agent:
-      - python-httpx/0.19.0
-    method: GET
-    uri: https://api.data.amsterdam.nl/panorama/panoramas/DPX2018000001-000001_pano_0000_000001
-  response:
-    content: ''
-    headers:
-      access-control-allow-credentials:
-      - 'true'
-      cache-control:
-      - no-cache
-      connection:
-      - close
-      content-length:
-      - '0'
-      content-security-policy:
-      - frame-ancestors 'self';
-      content-type:
-      - text/html; charset=utf-8
-      location:
-      - /panorama/panoramas/DPX2018000001-000001_pano_0000_000001/
-      referrer-policy:
-      - strict-origin
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains; preload
-      vary:
-      - Origin
-      x-content-type-options:
-      - nosniff
-      x-frame-options:
-      - SAMEORIGIN
-      x-xss-protection:
-      - 1; mode=block
-    http_version: HTTP/1.1
-    status_code: 301
-- request:
-    body: ''
-    headers:
-      accept:
-      - '*/*'
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      host:
-      - api.data.amsterdam.nl
-      user-agent:
-      - python-httpx/0.19.0
+      - python-httpx/0.23.1
     method: GET
     uri: https://api.data.amsterdam.nl/panorama/panoramas/DPX2018000001-000001_pano_0000_000001/
   response:
@@ -80,7 +34,7 @@ interactions:
       referrer-policy:
       - strict-origin
       strict-transport-security:
-      - max-age=31536000; includeSubDomains; preload
+      - max-age=31536999; includeSubDomains; preload
       vary:
       - Accept, Origin
       x-content-type-options:
@@ -103,7 +57,7 @@ interactions:
       host:
       - panorama.data.amsterdam.nl
       user-agent:
-      - python-httpx/0.19.0
+      - python-httpx/0.23.1
     method: GET
     uri: https://panorama.data.amsterdam.nl/panorama/2018/11/01/DPX2018000001-000001/pano_0000_000001/equirectangular/panorama_4000.jpg
   response:
@@ -2243,7 +2197,7 @@ interactions:
       content-type:
       - image/jpeg
       date:
-      - Tue, 05 Oct 2021 09:34:40 GMT
+      - Mon, 28 Nov 2022 16:18:41 GMT
       etag:
       - 45ae219d5f505fcd5078d4922ac97ef5
       last-modified:
@@ -2251,15 +2205,17 @@ interactions:
       referrer-policy:
       - strict-origin
       strict-transport-security:
-      - max-age=31536000; includeSubDomains; preload
+      - max-age=31536999; includeSubDomains; preload
       x-content-type-options:
       - nosniff
       x-frame-options:
       - SAMEORIGIN
+      x-openstack-request-id:
+      - tx66ed6ea50e3f4c3aabd14-006384df61
       x-timestamp:
       - '1541508855.24812'
       x-trans-id:
-      - tx92b81d9e3832458ba0d03-00615c1c30
+      - tx66ed6ea50e3f4c3aabd14-006384df61
       x-xss-protection:
       - 1; mode=block
     http_version: HTTP/1.1

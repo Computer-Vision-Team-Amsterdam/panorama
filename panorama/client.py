@@ -68,7 +68,8 @@ class _AsyncPanoramaClient(AsyncClient, BasePanoramaClient):
 
     async def get_panorama(self, panorama_id: str) -> models.Panorama:
         """Get an individual panorama object by remote id"""
-        return await self._get_or_raise(panorama_id, models.Panorama)
+        path = panorama_id if panorama_id.endswith("/") else panorama_id + "/"
+        return await self._get_or_raise(path, models.Panorama)
 
     async def download_image(
         self,
@@ -132,7 +133,8 @@ class _PanoramaClient(Client, BasePanoramaClient):
 
     def get_panorama(self, panorama_id: str) -> models.Panorama:
         """Get an individual panorama object by remote id"""
-        return self._get_or_raise(panorama_id, models.Panorama)
+        path = panorama_id if panorama_id.endswith("/") else panorama_id + "/"
+        return self._get_or_raise(path, models.Panorama)
 
     def download_image(
         self,
