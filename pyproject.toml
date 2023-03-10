@@ -21,8 +21,8 @@ pytest-asyncio = {version = "^0.15.1", source = "PyPI"}
 pytest-vcr = {version = "^1.0.2", source = "PyPI"}
 haversine = {version = "^2.5.1", source = "PyPI"}
 Sphinx = {version = "^4.2.0", source = "PyPI"}
-typing-extensions = { version = "^4.4", source = "PyPI"}
-pre-commit = "^3.1.1"
+typing-extensions = {version = "^4.4", source = "PyPI"}
+pre-commit = {version = "^3.1.1", source = "PyPI"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
