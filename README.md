@@ -4,8 +4,20 @@ The Panorama API Client is a package that wraps the Datapunt Panoramas API.
 
 ## Requirements
 
-- A recent version of Python 3. The project is being developed on Python 3.9, but should be compatible with some older minor versions.
-- This project uses [Poetry](https://python-poetry.org/) as its package manager.
+-   A recent version of Python 3. The project is being developed on Python 3.14, but should be compatible with some older minor versions.
+-   We use UV as package manager, which can be installed using any method mentioned on [the UV webpage](https://docs.astral.sh/uv/getting-started/installation/).
+
+    The easiest option is to use their installer:
+    ```shell
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+    It is also possible to use pip:
+    ```shell
+    pipx install uv
+    ```
+
+    Afterwards, uv can be updated using `uv self update`.
 
 ## Getting Started
 
@@ -13,7 +25,10 @@ Clone this repository and install the dependencies:
 
 ```shell
 git clone git@github.com:Computer-Vision-Team-Amsterdam/panorama.git
-poetry install
+cd panorama
+uv venv --python 3.14
+source .venv/bin/activate
+uv pip install -r pyproject.toml --extra dev 
 ```
 
 Or install as a dependency to your own project:
