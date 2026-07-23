@@ -12,12 +12,12 @@ jobs:
       vmImage: ubuntu-latest
     strategy:
       matrix:
-        Python3.7:
-          python.version: '3.7'
-        Python3.8:
-          python.version: '3.8'
-        Python3.9:
-          python.version: '3.9'
+        Python3.10:
+          python.version: '3.10'
+        Python3.12:
+          python.version: '3.12'
+        Python3.14:
+          python.version: '3.14'
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -26,12 +26,14 @@ jobs:
 
       - script: |
           python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+          pip install uv
+          uv venv --python $(python.version)
+          source .venv/bin/activate
+          uv pip install -r pyproject.toml
         displayName: 'Install dependencies'
 
       - script: |
-          poetry run pytest -s --cov=panorama --cov-report term-missing
+          uv run pytest -s --cov=panorama --cov-report term-missing
         displayName: 'pytest'
 
   - job: OSX
@@ -39,12 +41,12 @@ jobs:
       vmImage: macOS-latest
     strategy:
       matrix:
-        Python3.7:
-          python.version: '3.7'
-        Python3.8:
-          python.version: '3.8'
-        Python3.9:
-          python.version: '3.9'
+        Python3.10:
+          python.version: '3.10'
+        Python3.12:
+          python.version: '3.12'
+        Python3.14:
+          python.version: '3.14'
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -53,12 +55,14 @@ jobs:
 
       - script: |
           python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+          pip install uv
+          uv venv --python $(python.version)
+          source .venv/bin/activate
+          uv pip install -r pyproject.toml
         displayName: 'Install dependencies'
 
       - script: |
-          poetry run pytest -s --cov=panorama --cov-report term-missing
+          uv run pytest -s --cov=panorama --cov-report term-missing
         displayName: 'pytest'
 
   - job: Style
@@ -66,8 +70,8 @@ jobs:
       vmImage: ubuntu-latest
     strategy:
       matrix:
-        Python3.9:
-          python.version: '3.9'
+        Python3.14:
+          python.version: '3.14'
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -76,22 +80,24 @@ jobs:
 
       - script: |
           python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+          pip install uv
+          uv venv --python $(python.version)
+          source .venv/bin/activate
+          uv pip install -r pyproject.toml
         displayName: 'Install dependencies'
 
       - script: |
-          poetry run isort panorama tests
+          uv run isort panorama tests
         displayName: 'isort'
 
       - script: |
-          poetry run black .
+          uv run black .
         displayName: 'black'
 
       - script: |
-          poetry run mypy --config-file=.mypyrc panorama tests
+          uv run mypy --config-file=.mypyrc panorama tests
         displayName: 'mypy'
 
       - script: |
-          poetry run pylint --jobs=0 --rcfile=.pylintrc panorama tests
+          uv run pylint --jobs=0 --rcfile=.pylintrc panorama tests
         displayName: 'pylint'
