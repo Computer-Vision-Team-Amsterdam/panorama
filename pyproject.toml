@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "panorama"
-version = "0.2.3"
+version = "0.2.4"
 description = "Python wrapper for Amsterdam Panorama API."
 authors = [
     {name = "Thomas Brockmeier", email = "t.brockmeier@amsterdam.nl"},
