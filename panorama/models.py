@@ -2,19 +2,14 @@
 """
 This module should contain all (helper) models wrapping and/or abstracting API data
 """
+
 from __future__ import annotations
 
-import sys
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl
-
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:  # pragma: no cover
-    from typing_extensions import Literal
 
 
 class Link(BaseModel):
@@ -33,9 +28,9 @@ class PointGeometry(BaseModel):
 class ImageSize(str, Enum):
     """Legal image sizes"""
 
-    SMALL: Literal["small"] = "small"
-    MEDIUM: Literal["medium"] = "medium"
-    FULL: Literal["full"] = "full"
+    SMALL = "small"
+    MEDIUM = "medium"
+    FULL = "full"
 
 
 class PanoramaLinks(BaseModel):

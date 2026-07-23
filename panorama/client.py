@@ -4,6 +4,7 @@ httpx client to connect to the Panorama API
 This module should contain all code related to network interactions with the Panorama
 API
 """
+
 from datetime import date
 from pathlib import Path
 from typing import Optional, Type, TypeVar

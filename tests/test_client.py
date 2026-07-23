@@ -1,15 +1,9 @@
 # pylint: disable=C0116,W0613
 """Tests for the client module"""
+
 import asyncio
 from datetime import date, datetime, time, timezone
 from pathlib import Path
-try:
-    # Python 3.8 or higher
-    from typing import Literal
-except ImportError:
-    # Python 3.7 and below
-    from typing_extensions import Literal  # type: ignore
-
 from unittest.mock import patch
 
 import pytest
@@ -166,10 +160,8 @@ class TestAsyncClient:
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             limit_results=1
         )
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No next page available"):
             await self.client.next_page(response)
-
-            assert err.value == Literal["No next page available"]
 
     @pytest.mark.vcr
     async def test_lists_previous_page(self) -> None:
@@ -186,10 +178,8 @@ class TestAsyncClient:
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             limit_results=1
         )
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No previous page available"):
             await self.client.previous_page(response)
-
-            assert err.value == Literal["No previous page available"]
 
 
 class TestClient:
@@ -326,10 +316,8 @@ class TestClient:
     @pytest.mark.vcr
     def test_raises_when_no_next_page(self) -> None:
         response: PagedPanoramasResponse = self.client.list_panoramas(limit_results=1)
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No next page available"):
             self.client.next_page(response)
-
-            assert err.value == Literal["No next page available"]
 
     @pytest.mark.vcr
     def test_lists_previous_page(self) -> None:
@@ -344,7 +332,5 @@ class TestClient:
     @pytest.mark.vcr
     def test_raises_when_no_previous_page(self) -> None:
         response: PagedPanoramasResponse = self.client.list_panoramas(limit_results=1)
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No previous page available"):
             self.client.previous_page(response)
-
-            assert err.value == Literal["No previous page available"]

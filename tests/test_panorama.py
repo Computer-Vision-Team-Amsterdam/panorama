@@ -1,5 +1,6 @@
 # pylint: disable=C0116
 """Tests for the Panorama API client"""
+
 from panorama import __version__
 
 
