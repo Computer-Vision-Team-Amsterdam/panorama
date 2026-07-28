@@ -53,10 +53,15 @@ import asyncio
 from panorama.client import AsyncPanoramaClient
 from panorama import models
 
-# Start your event loop
-loop = asyncio.get_event_loop()
-
 # Get the first page of panoramas
-response: models.PagedPanoramasResponse = loop.run_until_complete(AsyncPanoramaClient.list_panoramas())
+response: models.PagedPanoramasResponse = await AsyncPanoramaClient.list_panoramas()
+
+# Or
+async_task: models.PagedPanoramasResponse = asyncio.create_task(AsyncPanoramaClient.list_panoramas())
+
+while not async_task.done():
+    await asyncio.sleep(1)
+
+response: models.PagedPanoramasResponse = async_task.result()
 
 ```
