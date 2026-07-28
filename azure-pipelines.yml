@@ -83,7 +83,7 @@ jobs:
           pip install uv
           uv venv --python $(python.version)
           source .venv/bin/activate
-          uv pip install -r pyproject.toml
+          uv pip install -r pyproject.toml --extra dev
         displayName: 'Install dependencies'
 
       - script: |
@@ -99,5 +99,5 @@ jobs:
         displayName: 'mypy'
 
       - script: |
-          uv run pylint --jobs=0 --rcfile=.pylintrc panorama tests
+          uv run pylint --jobs=0 --rcfile=.pylintrc --load-plugins pylint_pydantic panorama tests
         displayName: 'pylint'
