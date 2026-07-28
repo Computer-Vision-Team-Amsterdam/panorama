@@ -186,9 +186,9 @@ class _PanoramaClient(Client, BasePanoramaClient):
         return self._get_or_raise(page.links.next.href, models.PagedPanoramasResponse)
 
 
-AsyncPanoramaClient = _AsyncPanoramaClient(
+AsyncPanoramaClient = _AsyncPanoramaClient(  # pylint: disable=C0103
     base_url="https://api.data.amsterdam.nl/panorama/panoramas", timeout=10.0
 )
-PanoramaClient = _PanoramaClient(
+PanoramaClient = _PanoramaClient(  # pylint: disable=C0103
     base_url="https://api.data.amsterdam.nl/panorama/panoramas", timeout=10.0
 )
