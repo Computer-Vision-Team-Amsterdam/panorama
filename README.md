@@ -1,26 +1,13 @@
 # Panorama API Client
 
-The Panorama API Client is a package that wraps the Datapunt Panoramas API.
+The Panorama API Client is a package that wraps the [Datapunt Panorama API](https://api.data.amsterdam.nl/panorama) of the Gemeente Amsterdam.
 
 ## Requirements
 
-- A recent version of Python 3. The project is being developed on Python 3.9, but should be compatible with some older minor versions.
-- This project uses [Poetry](https://python-poetry.org/) as its package manager.
+-   A recent version of Python 3. The project is being developed on Python 3.14, but should be compatible with some older minor versions.
+-   Install the dependencies following the [instructions here](INSTALL.md).
 
 ## Getting Started
-
-Clone this repository and install the dependencies:
-
-```shell
-git clone git@github.com:Computer-Vision-Team-Amsterdam/panorama.git
-poetry install
-```
-
-Or install as a dependency to your own project:
-
-```shell
-pip install git+ssh://git@github.com/Computer-Vision-Team-Amsterdam/panorama.git@v0.2.2
-```
 
 Use the `PanoramaClient` to browse retrieve Panoramas from the API:
 
@@ -66,10 +53,15 @@ import asyncio
 from panorama.client import AsyncPanoramaClient
 from panorama import models
 
-# Start your event loop
-loop = asyncio.get_event_loop()
-
 # Get the first page of panoramas
-response: models.PagedPanoramasResponse = loop.run_until_complete(AsyncPanoramaClient.list_panoramas())
+response: models.PagedPanoramasResponse = await AsyncPanoramaClient.list_panoramas()
+
+# Or
+async_task: models.PagedPanoramasResponse = asyncio.create_task(AsyncPanoramaClient.list_panoramas())
+
+while not async_task.done():
+    await asyncio.sleep(1)
+
+response: models.PagedPanoramasResponse = async_task.result()
 
 ```

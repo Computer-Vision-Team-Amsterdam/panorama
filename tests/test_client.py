@@ -1,15 +1,9 @@
 # pylint: disable=C0116,W0613
 """Tests for the client module"""
-import asyncio
+
+# import asyncio
 from datetime import date, datetime, time, timezone
 from pathlib import Path
-try:
-    # Python 3.8 or higher
-    from typing import Literal
-except ImportError:
-    # Python 3.7 and below
-    from typing_extensions import Literal  # type: ignore
-
 from unittest.mock import patch
 
 import pytest
@@ -19,7 +13,7 @@ from httpx import HTTPStatusError
 from panorama.client import _AsyncPanoramaClient, _PanoramaClient
 from panorama.models import LocationQuery, PagedPanoramasResponse, Panorama
 
-pytestmark = pytest.mark.asyncio  # Required statement to run async tests
+# pytestmark = pytest.mark.asyncio  # Required statement to run async tests
 
 
 class TestAsyncClient:
@@ -32,22 +26,19 @@ class TestAsyncClient:
         assert self.client.base_url.is_absolute_url
 
     @pytest.mark.vcr
-    async def test_get_retrieves_model(
-        self, event_loop: asyncio.AbstractEventLoop
-    ) -> None:
+    @pytest.mark.asyncio
+    async def test_get_retrieves_model(self) -> None:
         assert isinstance(await self.client.get_panorama(self.panorama_id), Panorama)
 
     @pytest.mark.vcr
-    async def test_get_throws_not_found(
-        self, event_loop: asyncio.AbstractEventLoop
-    ) -> None:
+    @pytest.mark.asyncio
+    async def test_get_throws_not_found(self) -> None:
         with pytest.raises(HTTPStatusError):
             await self.client.get_panorama(f"invalid_{self.panorama_id}")
 
     @pytest.mark.vcr
-    async def test_download_retrieves_image(
-        self, event_loop: asyncio.AbstractEventLoop
-    ) -> None:
+    @pytest.mark.asyncio
+    async def test_download_retrieves_image(self) -> None:
         panorama = await self.client.get_panorama(self.panorama_id)
         with patch("builtins.open") as the_mock:
             await self.client.download_image(panorama)
@@ -55,12 +46,14 @@ class TestAsyncClient:
         the_mock.assert_called_once_with(Path(f"{panorama.id}.jpg"), "wb")
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_panoramas(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas()
         assert response
         assert response.panoramas
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_panoramas_at_location(self) -> None:
         location = LocationQuery(
             latitude=52.3626755978307, longitude=4.90769952140867, radius=0.5
@@ -76,6 +69,7 @@ class TestAsyncClient:
                 assert panorama.geometry.coordinates[1] == location.latitude
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_panoramas_only_before_timestamp(self) -> None:
         timestamp_before = date(2018, 1, 1)
 
@@ -91,6 +85,7 @@ class TestAsyncClient:
             )
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_panoramas_only_after_timestamp(self) -> None:
         timestamp_after = date(2018, 1, 1)
 
@@ -106,6 +101,7 @@ class TestAsyncClient:
             )
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_only_n_results(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             limit_results=2
@@ -114,6 +110,7 @@ class TestAsyncClient:
         assert len(response.panoramas) == 2
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_results_with_combined_filters(self) -> None:
         location = LocationQuery(
             latitude=52.3626770908732, longitude=4.90774612505295, radius=10
@@ -154,6 +151,7 @@ class TestAsyncClient:
             )
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_next_page(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas()
         next_page = await self.client.next_page(response)
@@ -162,16 +160,16 @@ class TestAsyncClient:
         assert response.panoramas != next_page.panoramas
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_raises_when_no_next_page(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             limit_results=1
         )
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No next page available"):
             await self.client.next_page(response)
 
-            assert err.value == Literal["No next page available"]
-
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_lists_previous_page(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas()
         next_page = await self.client.next_page(response)
@@ -182,14 +180,13 @@ class TestAsyncClient:
         assert response.panoramas == first_page.panoramas
 
     @pytest.mark.vcr
+    @pytest.mark.asyncio
     async def test_raises_when_no_previous_page(self) -> None:
         response: PagedPanoramasResponse = await self.client.list_panoramas(
             limit_results=1
         )
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No previous page available"):
             await self.client.previous_page(response)
-
-            assert err.value == Literal["No previous page available"]
 
 
 class TestClient:
@@ -202,18 +199,16 @@ class TestClient:
         assert self.client.base_url.is_absolute_url
 
     @pytest.mark.vcr
-    def test_get_retrieves_model(self, event_loop: asyncio.AbstractEventLoop) -> None:
+    def test_get_retrieves_model(self) -> None:
         assert isinstance(self.client.get_panorama(self.panorama_id), Panorama)
 
     @pytest.mark.vcr
-    def test_get_throws_not_found(self, event_loop: asyncio.AbstractEventLoop) -> None:
+    def test_get_throws_not_found(self) -> None:
         with pytest.raises(HTTPStatusError):
             self.client.get_panorama(f"invalid_{self.panorama_id}")
 
     @pytest.mark.vcr
-    def test_download_retrieves_image(
-        self, event_loop: asyncio.AbstractEventLoop
-    ) -> None:
+    def test_download_retrieves_image(self) -> None:
         panorama = self.client.get_panorama(self.panorama_id)
         with patch("builtins.open") as the_mock:
             self.client.download_image(panorama)
@@ -326,10 +321,8 @@ class TestClient:
     @pytest.mark.vcr
     def test_raises_when_no_next_page(self) -> None:
         response: PagedPanoramasResponse = self.client.list_panoramas(limit_results=1)
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No next page available"):
             self.client.next_page(response)
-
-            assert err.value == Literal["No next page available"]
 
     @pytest.mark.vcr
     def test_lists_previous_page(self) -> None:
@@ -344,7 +337,5 @@ class TestClient:
     @pytest.mark.vcr
     def test_raises_when_no_previous_page(self) -> None:
         response: PagedPanoramasResponse = self.client.list_panoramas(limit_results=1)
-        with pytest.raises(ValueError) as err:
+        with pytest.raises(ValueError, match=r"No previous page available"):
             self.client.previous_page(response)
-
-            assert err.value == Literal["No previous page available"]

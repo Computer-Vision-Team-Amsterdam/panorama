@@ -4,6 +4,7 @@ httpx client to connect to the Panorama API
 This module should contain all code related to network interactions with the Panorama
 API
 """
+
 from datetime import date
 from pathlib import Path
 from typing import Optional, Type, TypeVar
@@ -55,9 +56,11 @@ class BasePanoramaClient:
 
 class _AsyncPanoramaClient(AsyncClient, BasePanoramaClient):
     def __init__(
-        self, base_url: str = "https://api.data.amsterdam.nl/panorama/panoramas"
+        self,
+        base_url: str = "https://api.data.amsterdam.nl/panorama/panoramas",
+        timeout: float = 5.0,
     ) -> None:
-        super().__init__(base_url=base_url)
+        super().__init__(base_url=base_url, timeout=timeout)
 
     async def _get_or_raise(self, path: str, type_: Type[T]) -> T:
         """Helper method to retrieve and typecast data"""
@@ -120,9 +123,11 @@ class _AsyncPanoramaClient(AsyncClient, BasePanoramaClient):
 
 class _PanoramaClient(Client, BasePanoramaClient):
     def __init__(
-        self, base_url: str = "https://api.data.amsterdam.nl/panorama/panoramas"
+        self,
+        base_url: str = "https://api.data.amsterdam.nl/panorama/panoramas",
+        timeout: float = 5.0,
     ) -> None:
-        super().__init__(base_url=base_url)
+        super().__init__(base_url=base_url, timeout=timeout)
 
     def _get_or_raise(self, path: str, type_: Type[T]) -> T:
         """Helper method to retrieve and typecast data"""
@@ -181,5 +186,9 @@ class _PanoramaClient(Client, BasePanoramaClient):
         return self._get_or_raise(page.links.next.href, models.PagedPanoramasResponse)
 
 
-AsyncPanoramaClient = _AsyncPanoramaClient()
-PanoramaClient = _PanoramaClient()
+AsyncPanoramaClient = _AsyncPanoramaClient(  # pylint: disable=C0103
+    base_url="https://api.data.amsterdam.nl/panorama/panoramas", timeout=10.0
+)
+PanoramaClient = _PanoramaClient(  # pylint: disable=C0103
+    base_url="https://api.data.amsterdam.nl/panorama/panoramas", timeout=10.0
+)
